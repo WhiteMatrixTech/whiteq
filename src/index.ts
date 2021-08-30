@@ -12,9 +12,9 @@ import {
 } from './types';
 
 export class WhiteQ<T = any, R = any, N extends string = string> {
-  private queques: Map<string, Queue> = new Map();
+  private queques: Map<string, Queue<T, R, N>> = new Map();
 
-  private workers: Map<string, Worker> = new Map();
+  private workers: Map<string, Worker<T, R, N>> = new Map();
 
   private flow: FlowProducer;
 
@@ -26,15 +26,15 @@ export class WhiteQ<T = any, R = any, N extends string = string> {
     this.flow = new FlowProducer(baseOpts);
   }
 
-  public queue(queueName: string): Queue {
+  public queue(queueName: string): Queue<T, R, N> {
     if (!this.queques.has(queueName)) {
       const q = new Queue<T, R, N>(queueName, this.opts);
       this.queques.set(queueName, q);
     }
-    return this.queques.get(queueName) as Queue;
+    return this.queques.get(queueName) as Queue<T, R, N>;
   }
 
-  public addJob(queueName: string, name: string, data: T, opts: JobsOptions): Promise<Job<T, R, N>> {
+  public addJob(queueName: string, name: N, data: T, opts: JobsOptions): Promise<Job<T, R, N>> {
     const q = this.queue(queueName);
     return q.add(name, data, opts);
   }
@@ -42,7 +42,7 @@ export class WhiteQ<T = any, R = any, N extends string = string> {
   public addJobs(
     queueName: string,
     jobs: {
-      name: string;
+      name: N;
       data: T;
       opts?: BulkJobOptions;
     }[]
@@ -51,12 +51,12 @@ export class WhiteQ<T = any, R = any, N extends string = string> {
     return q.addBulk(jobs);
   }
 
-  public worker(queueName: string, processor?: string | Processor<T, R, N>, opts?: WorkerOptions): Worker {
+  public worker(queueName: string, processor?: string | Processor<T, R, N>, opts?: WorkerOptions): Worker<T, R, N> {
     if (!this.workers.has(queueName)) {
-      const w = new Worker(queueName, processor, opts);
+      const w = new Worker<T, R, N>(queueName, processor, opts);
       this.workers.set(queueName, w);
     }
-    return this.workers.get(queueName) as Worker;
+    return this.workers.get(queueName) as Worker<T, R, N>;
   }
 
   public addFlowJobs(flow: FlowJob, opts?: FlowOpts): Promise<JobNode> {
