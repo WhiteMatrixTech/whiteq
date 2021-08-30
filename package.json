@@ -1,0 +1,49 @@
+{
+  "name": "whiteq",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "husky install",
+    "build": "tsc",
+    "start:dev": "ts-node src/index.ts",
+    "env:up": "docker-compose -f ./docker-compose.yaml up -d",
+    "env:down": "docker-compose -f ./docker-compose.yaml down"
+  },
+  "dependencies": {
+    "bullmq": "^1.44.2"
+  },
+  "devDependencies": {
+    "@types/node": "^16.7.6",
+    "@willin/eslint-config": "^0.0.6",
+    "eslint": "^7.32.0",
+    "eslint-plugin-import": "^2.24.2",
+    "husky": "^7.0.2",
+    "lint-staged": "^11.1.2",
+    "prettier": "^2.3.2",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.[jt]s": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WhiteMatrixTech/whiteq.git"
+  },
+  "keywords": [],
+  "author": "Willin Wang <willin@willin.org> (https://github.com/willin)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/WhiteMatrixTech/whiteq/issues"
+  },
+  "homepage": "https://github.com/WhiteMatrixTech/whiteq#readme"
+}
