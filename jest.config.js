@@ -28,6 +28,7 @@ module.exports = {
     '^.+\\.(t|j)s$': 'ts-jest'
   },
   // preset: '@shelf/jest-mongodb',
+  globalSetup: './test/setup.ts',
   testTimeout: 90000,
   collectCoverageFrom: [
     //
