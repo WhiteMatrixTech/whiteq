@@ -48,4 +48,4 @@ jobs:
           coverageCommand: yarn test:cov --colors
           debug: false
       - name: Prune Docker
-        run: docker system prune -af
+        run: docker delete -f redis && docker system prune -af
