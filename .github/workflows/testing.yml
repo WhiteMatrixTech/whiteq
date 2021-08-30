@@ -20,15 +20,16 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-    services:
-      redis:
-        image: redis
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Setup redis
+        uses: supercharge/redis-github-action@1.2.0
+        with:
+          redis-version: 6
       - uses: actions/cache@v2
         with:
           path: '**/node_modules'
@@ -43,7 +44,6 @@ jobs:
         uses: paambaati/codeclimate-action@v2.7.5
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
-          REDIS_HOST: redis
         with:
           coverageCommand: yarn test:cov --colors
           debug: false

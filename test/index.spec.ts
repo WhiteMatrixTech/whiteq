@@ -6,7 +6,7 @@ describe('Unit Tests', () => {
   beforeAll(() => {
     wq = new WhiteQ({
       connection: {
-        host: process.env.REDIS_HOST || 'localhost'
+        host: process.env.REDIS_URL || 'localhost'
       }
     });
     expect(wq).toBeDefined();
