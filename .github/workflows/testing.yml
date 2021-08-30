@@ -47,3 +47,5 @@ jobs:
         with:
           coverageCommand: yarn test:cov --colors
           debug: false
+      - name: Prune Docker
+        run: docker system prune
