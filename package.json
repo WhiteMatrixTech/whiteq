@@ -9,6 +9,7 @@
     "start:dev": "ts-node src/index.ts",
     "env:up": "docker-compose -f ./docker-compose.yaml up -d",
     "env:down": "docker-compose -f ./docker-compose.yaml down",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage"
