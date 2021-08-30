@@ -1,5 +1,8 @@
-import { Queue, Worker, FlowProducer, QueueBaseOptions } from 'bullmq';
 import {
+  Queue,
+  Worker,
+  FlowProducer,
+  QueueBaseOptions,
   QueueOptions,
   JobsOptions,
   Job,
@@ -9,7 +12,7 @@ import {
   JobNode,
   FlowOpts,
   BulkJobOptions
-} from './types';
+} from 'bullmq';
 
 export class WhiteQ<T = any, R = any, N extends string = string> {
   private queques: Map<string, Queue<T, R, N>> = new Map();
@@ -18,12 +21,20 @@ export class WhiteQ<T = any, R = any, N extends string = string> {
 
   private flow: FlowProducer;
 
-  constructor(private readonly opts: QueueOptions) {
+  constructor(private readonly opts?: QueueOptions) {
     const baseOpts: QueueBaseOptions = {
-      connection: this.opts.connection,
-      prefix: this.opts.prefix
+      connection: this.opts?.connection,
+      prefix: this.opts?.prefix
     };
     this.flow = new FlowProducer(baseOpts);
+  }
+
+  public async disconnect(): Promise<void> {
+    await Promise.all([...this.queques].map(([, queue]) => queue.disconnect()));
+    await Promise.all([...this.workers].map(([, worker]) => worker.close()));
+    await this.flow.disconnect();
+    this.queques.clear();
+    this.workers.clear();
   }
 
   public queue(queueName: string): Queue<T, R, N> {
@@ -34,7 +45,7 @@ export class WhiteQ<T = any, R = any, N extends string = string> {
     return this.queques.get(queueName) as Queue<T, R, N>;
   }
 
-  public addJob(queueName: string, name: N, data: T, opts: JobsOptions): Promise<Job<T, R, N>> {
+  public addJob(queueName: string, name: N, data: T, opts?: JobsOptions): Promise<Job<T, R, N>> {
     const q = this.queue(queueName);
     return q.add(name, data, opts);
   }
@@ -64,4 +75,4 @@ export class WhiteQ<T = any, R = any, N extends string = string> {
   }
 }
 
-export * from './types';
+export { QueueOptions, JobsOptions, WorkerOptions, Processor, FlowJob, JobNode, FlowOpts, BulkJobOptions, Job };
