@@ -16,7 +16,7 @@ on:
 
 jobs:
   tests:
-    runs-on: self-hosted
+    runs-on: docker-runner
     strategy:
       matrix:
         node-version: [16.x]
