@@ -21,8 +21,6 @@ jobs:
       matrix:
         node-version: [16.x]
     steps:
-      - name: Prune Docker
-        run: docker rm -f redis && docker system prune -af
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
