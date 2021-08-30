@@ -1,5 +1,15 @@
 import { Queue, Worker, FlowProducer, QueueBaseOptions } from 'bullmq';
-import { QueueOptions, JobsOptions, Job, WorkerOptions, Processor, FlowJob, JobNode } from './types';
+import {
+  QueueOptions,
+  JobsOptions,
+  Job,
+  WorkerOptions,
+  Processor,
+  FlowJob,
+  JobNode,
+  FlowOpts,
+  BulkJobOptions
+} from './types';
 
 export class WhiteQ<T = any, R = any, N extends string = string> {
   private queques: Map<string, Queue> = new Map();
@@ -8,7 +18,13 @@ export class WhiteQ<T = any, R = any, N extends string = string> {
 
   private flow: FlowProducer;
 
-  constructor(private readonly opts: QueueOptions) {}
+  constructor(private readonly opts: QueueOptions) {
+    const baseOpts: QueueBaseOptions = {
+      connection: this.opts.connection,
+      prefix: this.opts.prefix
+    };
+    this.flow = new FlowProducer(baseOpts);
+  }
 
   public queue(queueName: string): Queue {
     if (!this.queques.has(queueName)) {
@@ -40,17 +56,10 @@ export class WhiteQ<T = any, R = any, N extends string = string> {
       const w = new Worker(queueName, processor, opts);
       this.workers.set(queueName, w);
     }
-    return this.workers.get(queueName);
+    return this.workers.get(queueName) as Worker;
   }
 
   public addFlowJobs(flow: FlowJob, opts?: FlowOpts): Promise<JobNode> {
-    if (!this.flow) {
-      const baseOpts: QueueBaseOptions = {
-        connection: this.opts.connection,
-        prefix: this.opts.prefix
-      };
-      this.flow = new FlowProducer(baseOpts);
-    }
     return this.flow.add(flow, opts);
   }
 }
