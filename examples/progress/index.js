@@ -29,15 +29,25 @@ async function main() {
   );
 
   // 可以在项目 B 中 添加处理器
-  const worker = wq.worker('queue1', async (job) => {
-    // 异步处理任务
-    // 更新任务进度
-    await job.updateProgress(50);
-    // 继续处理任务
+  const worker = wq.worker(
+    'queue1',
+    async (job) => {
+      // 异步处理任务
+      // 更新任务进度
+      await job.updateProgress(50);
+      // 继续处理任务
 
-    // 任务成功返回值
-    return { result: 'success' };
-  });
+      // 任务成功返回值
+      return { result: 'success' };
+    },
+    {
+      limiter: {
+        max: 10,
+        duration: 1000,
+        groupKey: 'customerId'
+      }
+    }
+  );
 
   // 可以在 worker 中监听
   worker.on('progress', (job, progress) => {
