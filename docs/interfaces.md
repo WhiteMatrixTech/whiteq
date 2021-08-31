@@ -85,6 +85,23 @@ interface QueueBaseOptions {
 }
 ```
 
+### QueueEventsOptions
+
+```ts
+interface QueueEventsOptions extends QueueBaseOptions {
+  /**
+   * Last event Id. If provided it is possible to continue
+   * consuming events from a known Id instead of from the last
+   * produced event.
+   */
+  lastEventId?: string;
+  /**
+   * Timeout for the blocking XREAD call to the events stream.
+   */
+  blockingTimeout?: number;
+}
+```
+
 ## JobsOptions
 
 ```ts

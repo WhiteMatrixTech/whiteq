@@ -36,7 +36,7 @@ const wq = new WhiteQ({
 });
 ```
 
-### 向队列中添加一条任务（消息）
+### 添加任务（消息）
 
 ```ts
 wq.addJob(queueName: string, name: N, data: T, opts?: JobsOptions): Promise<Job<T, R, N>>;
@@ -117,3 +117,88 @@ wq.addFlowJobs(flow: FlowJob, opts?: FlowOpts): Promise<JobNode>;
 ## 进阶使用
 
 参考：[Advanced](advanced.md)
+
+### 事件监听
+
+#### 1. 任务事件
+
+```ts
+const e = wq.event('Paint');
+
+e.on('completed', (jobId: string) => {
+  // Called every time a job is completed in any worker.
+});
+
+e.on('progress', ({ jobId, data }: { jobId: string; data: number | object })) => {
+  // jobId received a progress event
+});
+```
+
+包括事件的类型：
+
+- active
+- removed
+- waiting-children
+- added
+- completed
+- delayed
+- drained
+- progress
+- waiting
+- stalled
+- failed
+
+#### 2. 处理器事件
+
+```ts
+const w = wq.worker('Paint');
+
+w.on('progress', (job: Job, progress: number | object) => void);
+```
+
+包括事件的类型：
+
+- completed
+- drained
+- error
+- failed
+- progress
+
+#### 3. 队列事件
+
+```ts
+const q = wq.queue('Paint');
+
+q.on('cleaned', (jobs: string[], type: string) => void);
+```
+
+### 计划任务
+
+```ts
+// 将队列设置为计划任务队列
+wq.scheduler('queue2');
+
+// 添加计划任务
+await wq.addJob(
+  'queue2',
+  'cronJob',
+  {
+    data: 'test'
+  },
+  {
+    repeat: {
+      every: 1e4 // every 1s
+      // or
+      // cron: '* 15 3 * * *'
+    }
+  }
+);
+
+// 任务处理器无特殊之处
+```
+
+### 关闭所有连接
+
+```ts
+await wq.disconnect();
+```

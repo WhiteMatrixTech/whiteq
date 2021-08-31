@@ -64,6 +64,18 @@ describe('Unit Tests', () => {
     expect(jobs.job.name).toEqual('flow');
   });
 
+  it('event queue', () => {
+    wq.event('test');
+    const event = wq.event('test');
+    expect(event).toBeDefined();
+  });
+
+  it('scheduler queue', () => {
+    wq.scheduler('test');
+    const scheduler = wq.scheduler('test');
+    expect(scheduler).toBeDefined();
+  });
+
   afterAll(async () => {
     await wq.disconnect();
   });
