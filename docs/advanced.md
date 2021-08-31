@@ -11,28 +11,30 @@ const wq = new WhiteQ({
   connection: {
     host: process.env.REDIS_URL || 'localhost',
     port: 6379
+  }
+  // 不添加任务的话，可以不设置默认任务配置
+});
+
+const worker = wq.worker(
+  'queue1',
+  async (job) => {
+    // 异步处理任务
+    // 更新任务进度
+    await job.updateProgress(50);
+    // 继续处理任务
+
+    // 任务成功返回值
+    return { result: 'success' };
   },
-  defaultJobOptions: {
-    attempts: 3,
-    backoff: {
-      type: 'exponential',
-      delay: 1000
-    },
+  {
     limiter: {
+      // 频率限制: 每秒中最多 10 次
+      max: 10,
+      duration: 1000,
       groupKey: 'customerId'
     }
   }
-});
-
-const worker = wq.worker('queue1', async (job) => {
-  // 异步处理任务
-  // 更新任务进度
-  await job.updateProgress(50);
-  // 继续处理任务
-
-  // 任务成功返回值
-  return { result: 'success' };
-});
+);
 ```
 
 ### 2. 定义监听事件
@@ -90,3 +92,50 @@ await wq.addJob(
 ```
 
 项目示例代码位于： <https://github.com/WhiteMatrixTech/whiteq/blob/main/examples/progress/index.js>
+
+## 计划任务
+
+建议计划任务的定义及处理器放在同一项目下。
+
+示例代码：
+
+```ts
+import { WhiteQ } from 'whiteq';
+
+const wq = new WhiteQ({
+  connection: {
+    host: process.env.REDIS_URL || 'localhost',
+    port: 6379
+  }
+});
+
+wq.scheduler('queue2');
+
+await wq.addJob(
+  'queue2',
+  'cronJob',
+  {
+    data: 'test'
+  },
+  {
+    repeat: {
+      every: 1e4 // every 1s
+      // or
+      // cron: '* 15 3 * * *'
+    }
+  }
+);
+
+wq.worker(
+  'queue2',
+  async (job) => {
+    console.log(job.id);
+    return 'success';
+  },
+  {
+    concurrency: 10
+  }
+);
+```
+
+项目示例代码位于： <https://github.com/WhiteMatrixTech/whiteq/blob/main/examples/cron/index.js>
