@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>WhiteQ</title>
+    <meta name="description" content="WhiteQ by Willin Wang @WhiteMatrixTech" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <link rel="stylesheet" href="//unpkg.com/docsify/themes/vue.css" />
+  </head>
+  <body>
+    <nav>
+      <a href="#/">WhiteQ</a>
+      <a href="#/interfaces">Interfaces</a>
+      <a href="#/advanced">Advanced</a>
+    </nav>
+    <div id="app"></div>
+  </body>
+  <script>
+    window.$docsify = {
+      coverpage: true,
+      name: 'WhiteQ',
+      search: {
+        noData: {
+          '/': 'No results!'
+        },
+        paths: 'auto',
+        placeholder: {
+          '/': 'Search'
+        }
+      },
+      markdown: {
+        renderer: {
+          code: function (code, lang) {
+            var html = '';
+            var hl = Prism.highlight(code, Prism.languages[lang] || Prism.languages.markup);
+            return html + '<pre v-pre data-lang="' + lang + '"><code class="lang-' + lang + '">' + hl + '</code></pre>';
+          }
+        }
+      }
+    };
+  </script>
+  <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
+  <script src="//unpkg.com/docsify/lib/plugins/search.min.js"></script>
+  <script src="//unpkg.com/prismjs/components/prism-typescript.min.js"></script>
+</html>

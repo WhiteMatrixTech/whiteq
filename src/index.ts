@@ -1,4 +1,5 @@
 import {
+  ConnectionOptions,
   Queue,
   Worker,
   FlowProducer,
@@ -75,4 +76,15 @@ export class WhiteQ<T = any, R = any, N extends string = string> {
   }
 }
 
-export { QueueOptions, JobsOptions, WorkerOptions, Processor, FlowJob, JobNode, FlowOpts, BulkJobOptions, Job };
+export {
+  ConnectionOptions,
+  QueueOptions,
+  JobsOptions,
+  WorkerOptions,
+  Processor,
+  FlowJob,
+  JobNode,
+  FlowOpts,
+  BulkJobOptions,
+  Job
+};

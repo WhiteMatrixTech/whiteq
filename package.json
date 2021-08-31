@@ -1,7 +1,7 @@
 {
   "name": "whiteq",
-  "version": "0.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "Job/Message Queue based on BullMQ",
   "main": "index.js",
   "scripts": {
     "postinstall": "husky install",
