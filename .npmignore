@@ -1,6 +1,7 @@
 
 demo/
 docs/
+examples/
 /swagger-ui*
 globalConfig.json
 

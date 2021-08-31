@@ -117,3 +117,59 @@ wq.addFlowJobs(flow: FlowJob, opts?: FlowOpts): Promise<JobNode>;
 ## 进阶使用
 
 参考：[Advanced](advanced.md)
+
+### 事件监听
+
+#### 1. 任务事件
+
+```ts
+import { QueueEvents } from 'whiteq';
+
+onst queueEvents = new QueueEvents('Paint');
+
+queueEvents.on('completed', (jobId: string) => {
+  // Called every time a job is completed in any worker.
+});
+
+queueEvents.on('progress', ({ jobId, data }: { jobId: string; data: number | object })) => {
+  // jobId received a progress event
+});
+```
+
+包括事件的类型：
+
+- active
+- removed
+- waiting-children
+- added
+- completed
+- delayed
+- drained
+- progress
+- waiting
+- stalled
+- failed
+
+#### 2. 处理器事件
+
+```ts
+const w = wq.worker('Paint');
+
+w.on('progress', (job: Job, progress: number | object) => void);
+```
+
+包括事件的类型：
+
+- completed
+- drained
+- error
+- failed
+- progress
+
+#### 3. 队列事件
+
+```ts
+const q = wq.queue('Paint');
+
+q.on('cleaned', (jobs: string[], type: string) => void);
+```
