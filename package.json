@@ -1,12 +1,12 @@
 {
   "name": "whiteq",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Job/Message Queue based on BullMQ",
   "main": "dist/index.js",
   "module": "src/index.ts",
   "types": "dist/index.d.ts",
   "scripts": {
-    "postinstall": "husky install",
+    "prepare": "husky install",
     "build": "tsc",
     "start:dev": "ts-node src/index.ts",
     "env:up": "docker-compose -f ./docker-compose.yaml up -d",
@@ -25,7 +25,7 @@
     "@willin/eslint-config": "^0.0.6",
     "eslint": "^7.32.0",
     "eslint-plugin-import": "^2.24.2",
-    "husky": "^7.0.2",
+    "husky": "^7.0.4",
     "jest": "^27.1.0",
     "lint-staged": "^11.1.2",
     "prettier": "^2.3.2",
